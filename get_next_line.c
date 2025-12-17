@@ -146,7 +146,7 @@ char *find_line(t_library *library)
 	return line;
 }
 
-void update_stash(t_library *library)
+void update_stash(t_library **all_nodes, t_library *library)
 {
 	char *updated;
 	int i;
@@ -162,9 +162,7 @@ void update_stash(t_library *library)
 	updated = malloc(sizeof(*updated) * (library->stash_length + 1));
 	if(!updated)
 	{
-		free(library->stash);
-		library->nl_found = NULL;
-		library->stash = NULL;
+		free_node(all_nodes, library);
 		return;
 	}
 	while(library->updated_start[++i] != '\0')
@@ -194,7 +192,7 @@ char *get_next_line(int fd)
 	line = find_line(current_lib);
 	if(!line)
 		return(free_node(&library, current_lib), NULL);
-	update_stash(current_lib);
+	update_stash(&library, current_lib);
 
 	return line;
 }
