@@ -18,14 +18,11 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 {
 	int i;
 
-	i = 0;
+	i = -1;
 	library->nl_found = NULL;
-	while(i < library->stash_length)
-	{
+	while(++i < library->stash_length)
 		(*buffer)[i] = library->stash[i];
-		i++;
-	}
-	while((*buffer)[i] != '\0')
+	while((*buffer)[++i] != '\0')
 	{
 		if((*buffer)[i] == '\n')
 		{
@@ -33,13 +30,9 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 			break;
 		}
 		library->stash_length++;
-		i++;
 	}
-	while((*buffer)[i] != '\0')
-	{
+	while((*buffer)[++i] != '\0')
 		library->stash_length++;
-		i++;
-	}
 	free(library->stash);
 	return (*buffer);
 }
@@ -133,7 +126,7 @@ char *find_line(t_library *library)
 	int i;
 
 	if(library->nl_found == NULL)
-		length = library->stash_length;
+		return library->stash;
 	else
 		length = (library->nl_found - library->stash) + 1;
 	line = malloc(sizeof(*line) * (length + 1));
@@ -197,6 +190,8 @@ char *get_next_line(int fd)
 	line = find_line(current_lib);
 	if(!line)
 		return(free_node(&library, current_lib), NULL);
+	if(current_lib->nl_found == NULL)
+		return(free_node(&library, current_lib), line);
 	update_stash(&library, current_lib);
 
 	return line;
