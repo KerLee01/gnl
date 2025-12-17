@@ -130,8 +130,9 @@ char *find_line(t_library *library)
 	int i;
 
 	if(library->nl_found == NULL)
-		return library->stash;
-	length = (library->nl_found - library->stash) + 1;
+		length = (library->eos - library->stash);
+	else
+		length = (library->nl_found - library->stash) + 1;
 	line = malloc(sizeof(*line) * (length + 1));
 	if(!line)
 		return NULL;
