@@ -53,6 +53,8 @@ char *alloc_buffer(char *buffer, t_library *library, int *buffer_length)
 	{
 		*buffer_length *= 2;
 		decoy = malloc(sizeof(*decoy) * (*buffer_length + 1));
+		if(!decoy)
+			return NULL;
 		decoy[i] = '\0';
 		free(buffer);
 		buffer = decoy;
