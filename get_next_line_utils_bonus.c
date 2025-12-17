@@ -22,7 +22,7 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 	i = 0;
 	if(*buffer_length <= BUFFER_SIZE + library->stash_length)
 	{
-		*buffer_length *= 2;
+		*buffer_length *= (BUFFER_SIZE + library->stash_length);
 		if(*buffer_length <= BUFFER_SIZE + library->stash_length)
 			*buffer_length = BUFFER_SIZE + library->stash_length;
 		decoy = malloc(sizeof(*decoy) * (*buffer_length) + 1);
@@ -43,23 +43,31 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 
 void free_node(t_library **library, t_library *to_remove)
 {
-	t_library **current;
-	t_library *buffer;
+	t_library *current;
+	t_library * prev;
 
-	current = library;
-	while(*current != NULL)
+	current = *library;
+	prev = NULL;
+	if(current == to_remove)
 	{
-		if(*current == to_remove)
-		{
-			buffer = (*current)->next;
-			free((*current)->stash);
-			free(*current);
-			current = &buffer;
-		}
-		current = &((*current)->next);
+		*library = current->next;
+		free(to_remove->stash);
+		free(to_remove);
+		return;
 	}
-			
+	while(current)
+	{
+		prev = current;
+		current = current->next;
+		if(current == to_remove)
+		{
+			prev->next = current->next;
+			free(current->stash);
+			free(current);
+		}
+	}
 }
+
 void update_stash(t_library **all_nodes, t_library *library)
 {
 	char *updated;
