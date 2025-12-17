@@ -40,7 +40,7 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 		library->stash_length++;
 		i++;
 	}
-	return (free(library->stash), *buffer);
+	return (*buffer);
 }
 
 char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
