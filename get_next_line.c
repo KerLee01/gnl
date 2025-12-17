@@ -13,36 +13,6 @@ char *my_strchr(char *line)
 	}
 	return NULL;
 }
-/*
-char *insert_stash_buffer(t_library *library, char **buffer)
-{
-	int i;
-
-	i = 0;
-	library->nl_found = NULL;
-	while(i < library->stash_length)
-	{
-		(*buffer)[i] = library->stash[i];
-		i++;
-	}
-	while((*buffer)[i] != '\0')
-	{
-		if((*buffer)[i] == '\n')
-		{
-			library->nl_found = &(*buffer)[i];
-			break;
-		}
-		library->stash_length++;
-		i++;
-	}
-	while((*buffer)[i] != '\0')
-	{
-		library->stash_length++;
-		i++;
-	}
-	return (*buffer);
-}
-*/
 
 char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 {
@@ -66,6 +36,7 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 		decoy[i] = '\0';
 		free(buffer);
 		buffer = decoy;
+		library->stash = buffer;
 	}
 	return buffer;
 }
@@ -75,7 +46,6 @@ char *read_more(t_library *library)
 	int bytes;
 	int buffer_length;
 	char *buffer;
-	//char *new_stash;
 
 	buffer_length = library->stash_length;
 	buffer = NULL;
@@ -88,7 +58,6 @@ char *read_more(t_library *library)
 		if(!buffer)
 			return NULL;
 		bytes = read(library->fd, buffer + library->stash_length, BUFFER_SIZE);
-		library->stash = buffer;
 		if(bytes == 0)
 		{
 			if(library->stash[0] != '\0')
@@ -98,11 +67,8 @@ char *read_more(t_library *library)
 		if(bytes == -1)
 			return(NULL);
 		buffer[bytes + library->stash_length] = '\0';
-		
 		library->nl_found = my_strchr(buffer + library->stash_length);
 		library->stash_length += bytes;
-		//new_stash = insert_stash_buffer(library, &buffer);
-		//library->stash = new_stash;
 	}
 	return library->stash;
 }
