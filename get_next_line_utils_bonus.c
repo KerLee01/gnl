@@ -47,17 +47,17 @@ void free_node(t_library **library, t_library *to_remove)
 	t_library *buffer;
 
 	current = *library;
-	while(current)
+	while(*library != NULL)
 	{
-		if(current == to_remove)
+		if(*library == to_remove)
 		{
-			buffer = current;
-			current = current -> next;
+			buffer = *library;
+			*library = buffer -> next;
 			free(buffer->stash);
 			free(buffer);
 			return;
 		}
-		current = current->next;
+		*library = (*library)->next;
 	}
 }
 void update_stash(t_library **all_nodes, t_library *library)
