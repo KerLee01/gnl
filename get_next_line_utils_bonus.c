@@ -44,31 +44,22 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 void free_node(t_library **library, t_library *to_remove)
 {
 	t_library *current;
-	t_library * prev;
+	t_library *buffer;
 
 	current = *library;
-	prev = NULL;
-	if(current == to_remove)
-	{
-		*library = current->next;
-		free(to_remove->stash);
-		free(to_remove);
-		return;
-	}
 	while(current)
 	{
-		prev = current;
-		current = current->next;
 		if(current == to_remove)
 		{
-			prev->next = current->next;
-			free(current->stash);
-			free(current);
+			buffer = current;
+			current = current -> next;
+			free(buffer->stash);
+			free(buffer);
 			return;
 		}
+		current = current->next;
 	}
 }
-
 void update_stash(t_library **all_nodes, t_library *library)
 {
 	char *updated;
