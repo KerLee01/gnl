@@ -64,6 +64,7 @@ void free_node(t_library **library, t_library *to_remove)
 			prev->next = current->next;
 			free(current->stash);
 			free(current);
+			return;
 		}
 	}
 }
