@@ -18,17 +18,20 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 {
 	int i;
 
-	i = 0;
-	while(i < library->stash_length)
-	{
+	i = -1;
+	while(++i < library->stash_length)
 		(*buffer)[i] = library->stash[i];
-		i++;
-	}
-	while((*buffer)[i] != '\0')
+	while((*buffer)[++i] != '\0')
 	{
 		library->stash_length++;
-		i++;
+		if((*buffer)[i] == '\n')
+		{
+			library->nl_found = &(*buffer)[i];
+			break;
+		}
 	}
+	while((*buffer)[++i] != '\0')
+		library->stash_length++;
 	free(library->stash);
 	return (*buffer);
 }
@@ -39,18 +42,13 @@ char *read_more(t_library *library)
 	char *buffer;
 	char *new_stash;
 
-	// search if stash has newline
 	library->nl_found = my_strchr(library->stash);
 	while(library->nl_found == NULL)
 	{
-		// allocate buffer size and stash_length to fit stash and amount read
 		buffer = malloc(sizeof(*buffer) + (BUFFER_SIZE + library->stash_length + 1));
 		if(!buffer)
 			return NULL;
-		// read into buffer, buffer size but start from where stash ends
 		bytes = read(library->fd, buffer + library->stash_length, BUFFER_SIZE);
-		// if bytes is 0, could be empty file or nothing left to read in file.
-		// if the latter, stash might be filled
 		if(bytes == 0)
 		{
 			if(library->stash != NULL)
@@ -61,7 +59,6 @@ char *read_more(t_library *library)
 			return(free(buffer), NULL);
 		buffer[bytes + library->stash_length] = '\0';
 		new_stash = insert_stash_buffer(library, &buffer);
-		library->nl_found = my_strchr(new_stash);
 		library->stash = new_stash;
 	}
 	return library->stash;
