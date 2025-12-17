@@ -43,16 +43,43 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 	return (free(library->stash), *buffer);
 }
 
+char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
+{
+	char *decoy;
+	int i;
+
+	i = 0;
+	if(*buffer_length <= BUFFER_SIZE + library->stash_length)
+	{
+		*buffer_length *= 2;
+		if(*buffer_length <= BUFFER_SIZE + library->stash_length)
+			*buffer_length = BUFFER_SIZE + library->stash_length;
+		decoy = malloc(sizeof(*decoy) * (*buffer_length) + 1);
+		while(buffer != NULL && buffer[i] != '\0')
+		{
+			decoy[i] = buffer[i];
+			i++;
+		}
+		decoy[i] = '\0';
+		free(buffer);
+		buffer = decoy;
+	}
+	return buffer;
+}
+
 char *read_more(t_library *library)
 {
 	int bytes;
+	int buffer_length;
 	char *buffer;
 	char *new_stash;
 
+	buffer_length = 1;
+	buffer = NULL;
 	library->nl_found = my_strchr(library->stash);
 	while(library->nl_found == NULL)
 	{
-		buffer = malloc(sizeof(*buffer) + (BUFFER_SIZE + library->stash_length + 1));
+		buffer = allocate_buffer(buffer, library, &buffer_length);
 		if(!buffer)
 			return NULL;
 		bytes = read(library->fd, buffer + library->stash_length, BUFFER_SIZE);
