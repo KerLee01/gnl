@@ -14,18 +14,18 @@ char *my_strchr(char *line)
 	return NULL;
 }
 
-char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
+char *allocate_buffer(char *buffer, t_library *library)
 {
 	char *decoy;
 	int i;
 
 	i = 0;
-	if(*buffer_length <= BUFFER_SIZE + library->stash_length)
+	if(library->stash_length <= BUFFER_SIZE + library->stash_length)
 	{
-		*buffer_length *= 2;
-		if(*buffer_length <= BUFFER_SIZE + library->stash_length)
-			*buffer_length = BUFFER_SIZE + library->stash_length;
-		decoy = malloc(sizeof(*decoy) * (*buffer_length) + 1);
+		library->stash_length *= 2;
+		if(library->stash_length <= BUFFER_SIZE + library->stash_length)
+			library->stash_length = BUFFER_SIZE + library->stash_length;
+		decoy = malloc(sizeof(*decoy) * (library->stash_length) + 1);
 		if (!decoy)
 			return NULL;
 		while(buffer != NULL && buffer[i] != '\0')
@@ -44,28 +44,24 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 char *read_more(t_library *library)
 {
 	int bytes;
-	int buffer_length;
 	char *buffer;
 
-	buffer_length = library->stash_length;
 	buffer = NULL;
 	library->nl_found = my_strchr(library->stash);
 	if(library->nl_found == NULL && library->stash_length != 0)
 		buffer = library->stash;
 	while(library->nl_found == NULL)
 	{
-		buffer = allocate_buffer(buffer, library, &buffer_length);
+		buffer = allocate_buffer(buffer, library);
 		if(!buffer)
 			return NULL;
 		bytes = read(library->fd, buffer + library->stash_length, BUFFER_SIZE);
-		if(bytes == 0)
+		if(bytes == 0 || bytes == -1)
 		{
-			if(library->stash[0] != '\0')
+			if(bytes == 0 && library->stash[0] != '\0')
 				return (library->stash);
 			return(NULL);
 		}
-		if(bytes == -1)
-			return(NULL);
 		buffer[bytes + library->stash_length] = '\0';
 		library->nl_found = my_strchr(buffer + library->stash_length);
 		library->stash_length += bytes;
