@@ -15,6 +15,7 @@ typedef struct s_library
    char *stash;
    char *nl_found;
    char *eos;
+   char *updated_start;
    struct s_library *next;
 } t_library;
 
