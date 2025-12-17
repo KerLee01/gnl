@@ -18,11 +18,14 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 {
 	int i;
 
-	i = -1;
+	i = 0;
 	library->nl_found = NULL;
-	while(++i < library->stash_length)
+	while(i < library->stash_length)
+	{
 		(*buffer)[i] = library->stash[i];
-	while((*buffer)[++i] != '\0')
+		i++;
+	}
+	while((*buffer)[i] != '\0')
 	{
 		if((*buffer)[i] == '\n')
 		{
@@ -30,9 +33,13 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 			break;
 		}
 		library->stash_length++;
+		i++;
 	}
-	while((*buffer)[++i] != '\0')
+	while((*buffer)[i] != '\0')
+	{
 		library->stash_length++;
+		i++;
+	}
 	free(library->stash);
 	return (*buffer);
 }
