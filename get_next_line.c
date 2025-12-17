@@ -19,6 +19,7 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 	int i;
 
 	i = -1;
+	library->nl_found = NULL;
 	while(++i < library->stash_length)
 		(*buffer)[i] = library->stash[i];
 	while((*buffer)[++i] != '\0')
