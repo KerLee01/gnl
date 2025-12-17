@@ -88,20 +88,21 @@ char *read_more(t_library *library)
 		if(!buffer)
 			return NULL;
 		bytes = read(library->fd, buffer + library->stash_length, BUFFER_SIZE);
+		library->stash = buffer;
 		if(bytes == 0)
 		{
-			if(library->stash != NULL)
-				return (free(buffer), library->stash);
-			return(free(buffer), NULL);
+			if(library->stash[0] != '\0')
+				return (library->stash);
+			return(NULL);
 		}
 		if(bytes == -1)
 			return(free(buffer), NULL);
 		buffer[bytes + library->stash_length] = '\0';
+		
 		library->nl_found = my_strchr(buffer + library->stash_length);
 		library->stash_length += bytes;
 		//new_stash = insert_stash_buffer(library, &buffer);
 		//library->stash = new_stash;
-		library->stash = buffer;
 	}
 	return library->stash;
 }

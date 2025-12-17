@@ -19,7 +19,7 @@ typedef struct s_library
 } t_library;
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 42
+#define BUFFER_SIZE 10
 #endif
 
 int ft_strlen(char *str);
