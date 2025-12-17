@@ -126,7 +126,7 @@ char *find_line(t_library *library)
 	int i;
 
 	if(library->nl_found == NULL)
-		return library->stash;
+		length = library->stash_length;
 	else
 		length = (library->nl_found - library->stash) + 1;
 	line = malloc(sizeof(*line) * (length + 1));
@@ -190,8 +190,6 @@ char *get_next_line(int fd)
 	line = find_line(current_lib);
 	if(!line)
 		return(free_node(&library, current_lib), NULL);
-	if(current_lib->nl_found == NULL)
-		return(free_node(&library, current_lib), line);
 	update_stash(&library, current_lib);
 
 	return line;
