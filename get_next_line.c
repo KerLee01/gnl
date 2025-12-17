@@ -160,6 +160,13 @@ void update_stash(t_library *library)
 		return;
 	}
 	updated = malloc(sizeof(*updated) * (library->stash_length + 1));
+	if(!updated)
+	{
+		free(library->stash);
+		library->nl_found = NULL;
+		library->stash = NULL;
+		return;
+	}
 	while(library->updated_start[++i] != '\0')
 		updated[i] = library->updated_start[i];
 	updated[i] = '\0';
