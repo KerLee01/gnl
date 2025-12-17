@@ -150,19 +150,6 @@ char *find_line(t_library *library)
 	return line;
 }
 
-int ft_strlen(char *str)
-{
-	int i;
-
-	i = 0;
-	while(*str)
-	{
-		i++;
-		str++;
-	}
-	return i;
-}
-
 char *update_stash(t_library *library)
 {
 	char *updated;

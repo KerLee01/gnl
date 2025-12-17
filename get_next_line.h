@@ -22,6 +22,7 @@ typedef struct s_library
 #define BUFFER_SIZE 1
 #endif
 
+int ft_strlen(char *str);
 char *get_next_line(int fd);
 char *my_strchr(char *line);
 #endif
