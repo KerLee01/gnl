@@ -94,8 +94,11 @@ char *read_more(t_library *library)
 		if(bytes == -1)
 			return(free(buffer), NULL);
 		buffer[bytes + library->stash_length] = '\0';
-		new_stash = insert_stash_buffer(library, &buffer);
-		library->stash = new_stash;
+		if(buffer_length > BUFFER_SIZE + library->stash_length)
+		{
+			new_stash = insert_stash_buffer(library, &buffer);
+			library->stash = new_stash;
+		}
 	}
 	return library->stash;
 }
