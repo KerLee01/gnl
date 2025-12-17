@@ -30,7 +30,6 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 		i++;
 	}
 	free(library->stash);
-	library->eos = (*buffer) + library->stash_length;
 	return (*buffer);
 }
 
@@ -89,7 +88,6 @@ t_library *find_library(int fd, t_library **library)
 	current->stash_length = 0;
 	current->stash = NULL;
 	current->nl_found = NULL;
-	current->eos = NULL;
 	current->updated_start = NULL;
 	current->next = *library;
 	*library = current;
@@ -130,7 +128,7 @@ char *find_line(t_library *library)
 	int i;
 
 	if(library->nl_found == NULL)
-		length = (library->eos - library->stash);
+		length = library->stash_length;
 	else
 		length = (library->nl_found - library->stash) + 1;
 	line = malloc(sizeof(*line) * (length + 1));
@@ -157,17 +155,15 @@ void update_stash(t_library *library)
 	if(library->updated_start == NULL)
 	{
 		library->nl_found = NULL;
-		library->eos = NULL;
 		free(library->stash);
 		library->stash = NULL;
 		return;
 	}
-	updated = malloc(sizeof(*updated) * (library->eos - library->updated_start) + 1);
-	while(library->updated_start[++i])
+	updated = malloc(sizeof(*updated) * (library->stash_length + 1));
+	while(library->updated_start[++i] != '\0')
 		updated[i] = library->updated_start[i];
 	updated[i] = '\0';
 	library->nl_found = NULL;
-	library->eos = NULL;
 	library->updated_start = NULL;
 	free(library->stash);
 	library->stash = updated;

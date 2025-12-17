@@ -14,13 +14,12 @@ typedef struct s_library
    int stash_length;
    char *stash;
    char *nl_found;
-   char *eos;
    char *updated_start;
    struct s_library *next;
 } t_library;
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE 1
+#define BUFFER_SIZE 42
 #endif
 
 int ft_strlen(char *str);
