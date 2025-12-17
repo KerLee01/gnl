@@ -57,7 +57,7 @@ void free_node(t_library **library, t_library *to_remove)
 			free(buffer);
 			return;
 		}
-		*library = (*library)->next;
+		library = &(*library)->next;
 	}
 }
 void update_stash(t_library **all_nodes, t_library *library)
