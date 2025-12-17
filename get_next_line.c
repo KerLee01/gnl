@@ -27,12 +27,12 @@ char *insert_stash_buffer(t_library *library, char **buffer)
 	}
 	while((*buffer)[i] != '\0')
 	{
-		library->stash_length++;
 		if((*buffer)[i] == '\n')
 		{
 			library->nl_found = &(*buffer)[i];
 			break;
 		}
+		library->stash_length++;
 		i++;
 	}
 	while((*buffer)[i] != '\0')
