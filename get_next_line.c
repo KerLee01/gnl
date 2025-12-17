@@ -55,6 +55,8 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 		if(*buffer_length <= BUFFER_SIZE + library->stash_length)
 			*buffer_length = BUFFER_SIZE + library->stash_length;
 		decoy = malloc(sizeof(*decoy) * (*buffer_length) + 1);
+		if (!decoy)
+			return NULL;
 		while(buffer != NULL && buffer[i] != '\0')
 		{
 			decoy[i] = buffer[i];
