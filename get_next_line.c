@@ -96,7 +96,7 @@ char *read_more(t_library *library)
 			return(NULL);
 		}
 		if(bytes == -1)
-			return(free(buffer), NULL);
+			return(NULL);
 		buffer[bytes + library->stash_length] = '\0';
 		
 		library->nl_found = my_strchr(buffer + library->stash_length);
