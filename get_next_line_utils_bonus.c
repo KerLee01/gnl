@@ -22,7 +22,7 @@ char *allocate_buffer(char *buffer, t_library *library, int *buffer_length)
 	i = 0;
 	if(*buffer_length <= BUFFER_SIZE + library->stash_length)
 	{
-		*buffer_length *= (BUFFER_SIZE + library->stash_length);
+		*buffer_length *= 2;
 		if(*buffer_length <= BUFFER_SIZE + library->stash_length)
 			*buffer_length = BUFFER_SIZE + library->stash_length;
 		decoy = malloc(sizeof(*decoy) * (*buffer_length) + 1);
